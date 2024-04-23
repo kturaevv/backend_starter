@@ -1,0 +1,24 @@
+{
+    "name": "DevApplication",
+    "dockerComposeFile": [
+        "../docker/docker-compose.yml",
+        "../docker/docker-compose.dev.yml"
+    ],
+    "service": "app",
+    "workspaceFolder": "/application",
+    "customizations": {
+        "vscode": {
+            "settings": {},
+            "extensions": [
+                "charliermarsh.ruff",
+                "kokakiwi.vscode-just",
+                "matangover.mypy",
+                "ms-python.python",
+                "ms-vscode-remote.remote-containers",
+                "tamasfe.even-better-toml"
+            ]
+        }
+    },
+    "postCreateCommand": "/application/docker/entrypoint-dev.sh",
+    "shutdownAction": "stopCompose"
+}

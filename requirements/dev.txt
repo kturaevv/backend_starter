@@ -1,0 +1,9 @@
+-r base.txt
+ruff>=0.3.4
+mypy>=1.9.0
+coverage>=7.3.0
+pytest>=8.1.1
+pytest-asyncio>=0.23.6
+async-asgi-testclient>=1.4.11
+pytest-env>=1.0.1
+hypothesis>=6.100.1

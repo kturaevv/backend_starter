@@ -1,0 +1,14 @@
+{
+    "recommendations": [
+        "eamodio.gitlens",
+        "ms-python.python",
+        "ms-vscode-remote.remote-ssh",
+        "ms-vscode.remote-explorer",
+        "yzhang.markdown-all-in-one",
+        "foxundermoon.shell-format",
+        "calro.vscode-theme-one-dark-muted",
+        "ibm.output-colorizer",
+        "bierner.docs-view",
+        "donjayamanne.githistory"
+    ]
+}
