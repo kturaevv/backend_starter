@@ -10,7 +10,7 @@ from fastapi import (
 )
 from fastapi.responses import RedirectResponse
 
-from src.auth import jwt, service, utils
+from src.auth import service
 from src.auth.config import google_sso
 from src.auth.dependencies import (
     valid_authenticated_user,
@@ -54,11 +54,15 @@ async def register_user(
 async def auth_user(
     response: Response, user: AuthUserModel = Depends(service.authenticate_user)
 ) -> AccessTokenResponse:
-    access_token_value = jwt.create_access_token(user=user)
+    access_token_value = service.jwts.create_access_token(user=user)
     refresh_token_value = await service.create_refresh_token(user_id=user.id)
 
-    response.set_cookie(**utils.get_refresh_token_settings(refresh_token_value).data)
-    response.set_cookie(**utils.get_access_token_settings(access_token_value).data)
+    response.set_cookie(
+        **service.token.get_refresh_token_settings(refresh_token_value).data
+    )
+    response.set_cookie(
+        **service.token.get_access_token_settings(access_token_value).data
+    )
 
     return AccessTokenResponse(
         access_token=access_token_value,
@@ -73,11 +77,15 @@ async def refresh_token(
     refresh_token: AuthRefreshTokenModel = Depends(valid_refresh_token),
     user: AuthUserModel = Depends(valid_refresh_token_user),
 ) -> AccessTokenResponse:
-    access_token_value = jwt.create_access_token(user=user)
+    access_token_value = service.jwts.create_access_token(user=user)
     refresh_token_value = await service.create_refresh_token(user_id=user.id)
 
-    response.set_cookie(**utils.get_refresh_token_settings(refresh_token_value).data)
-    response.set_cookie(**utils.get_access_token_settings(access_token_value).data)
+    response.set_cookie(
+        **service.token.get_refresh_token_settings(refresh_token_value).data
+    )
+    response.set_cookie(
+        **service.token.get_access_token_settings(access_token_value).data
+    )
 
     worker.add_task(service.expire_refresh_token, refresh_token.uuid)
 
@@ -96,7 +104,7 @@ async def logout_user(
 
     response.delete_cookie("accessToken")
     response.delete_cookie(
-        **utils.get_refresh_token_settings(
+        **service.token.get_refresh_token_settings(
             refresh_token.refresh_token, expired=True
         ).model_dump(exclude_unset=True, exclude_defaults=True)
     )
@@ -132,10 +140,14 @@ async def google_callback(request: Request) -> RedirectResponse:
 
     response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
 
-    access_token_value = jwt.create_access_token(user=user_stored)
+    access_token_value = service.jwts.create_access_token(user=user_stored)
     refresh_token_value = await service.create_refresh_token(user_id=user_stored.id)
 
-    response.set_cookie(**utils.get_refresh_token_settings(refresh_token_value).data)
-    response.set_cookie(**utils.get_access_token_settings(access_token_value).data)
+    response.set_cookie(
+        **service.token.get_refresh_token_settings(refresh_token_value).data
+    )
+    response.set_cookie(
+        **service.token.get_access_token_settings(access_token_value).data
+    )
 
     return response

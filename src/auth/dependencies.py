@@ -3,7 +3,7 @@ from typing import Any
 
 from fastapi import Cookie, Depends, Response
 
-from src.auth import jwt, schemas, service, utils
+from src.auth import schemas, service
 from src.auth.config import auth_settings
 from src.auth.exceptions import (
     AuthorizationFailed,
@@ -11,7 +11,6 @@ from src.auth.exceptions import (
     EmailTaken,
     RefreshTokenNotValid,
 )
-from src.auth.jwt import parse_access_token
 from src.auth.models import AuthRefreshTokenModel, AuthUserModel
 from src.auth.schemas import JWTData
 
@@ -62,27 +61,29 @@ async def valid_refresh_token_user_token(
 
 async def refresh_access_token(
     response: Response,
-    access_token: JWTData | None = Depends(parse_access_token),
+    access_token: JWTData | None = Depends(service.jwts.parse_access_token),
     user: AuthUserModel = Depends(valid_refresh_token_user),
 ) -> JWTData | None:
     if access_token:
         return access_token
 
-    access_token_value = jwt.create_access_token(user=user)
-    response.set_cookie(**utils.get_access_token_settings(access_token_value).data)
+    access_token_value = service.jwts.create_access_token(user=user)
+    response.set_cookie(
+        **service.token.get_access_token_settings(access_token_value).data
+    )
     return access_token
 
 
 async def parse_tokens(
     response: Response,
-    tokens: tuple[str | None, str | None] = Depends(jwt.retrieve_auth_tokens),
+    tokens: tuple[str | None, str | None] = Depends(service.jwts.retrieve_auth_tokens),
 ) -> JWTData | None:
     access_token, refresh_token = tokens
     if not access_token and not refresh_token:
         return None
 
     if access_token:
-        return await jwt.parse_access_token(access_token)
+        return await service.jwts.parse_access_token(access_token)
 
     if refresh_token:
         try:
@@ -95,10 +96,12 @@ async def parse_tokens(
         if not user:
             raise AuthRequired()
 
-        new_access_token = jwt.create_access_token(user=user)
-        response.set_cookie(**utils.get_access_token_settings(new_access_token).data)
+        new_access_token = service.jwts.create_access_token(user=user)
+        response.set_cookie(
+            **service.token.get_access_token_settings(new_access_token).data
+        )
 
-        payload = jwt.decode_access_token(new_access_token)
+        payload = service.jwts.decode_access_token(new_access_token)
 
     return JWTData(**payload)
 

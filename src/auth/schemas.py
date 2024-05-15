@@ -1,10 +1,9 @@
-from datetime import datetime
 import re
 import typing
+from datetime import datetime
 
 from pydantic import EmailStr, Field, field_validator
 
-from src.auth.config import auth_settings
 from src.schema import CustomModel
 
 STRONG_PASSWORD_PATTERN = re.compile(r"^(?=.*[\d])(?=.*[!@#$%^&*])[\w!@#$%^&*]{6,128}$")
