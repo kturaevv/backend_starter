@@ -27,7 +27,7 @@ from src.auth.schemas import (
 )
 from src.exceptions import BadRequest, DetailedHTTPException
 
-router = APIRouter()
+router = APIRouter(prefix="/auth")
 
 
 @router.get("/me", response_model=BaseUser)
@@ -110,7 +110,7 @@ async def logout_user(
     )
 
 
-# Google login
+# Google SSO login
 
 
 @router.get("/google/login")
@@ -132,22 +132,18 @@ async def google_callback(request: Request) -> RedirectResponse:
         raise BadRequest
 
     user_stored = await service.get_user_by_email(user.email)
-
     if not user_stored:
-        await service.create_user_with_sso(user.email)
-        user_stored = await service.get_user_by_email(user.email)
-        assert user_stored is not None
-
-    response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+        user_stored = await service.create_user_with_sso(user.email)
+        assert user_stored is not None, "Empty user returned"
 
     access_token_value = service.jwts.create_access_token(user=user_stored)
     refresh_token_value = await service.create_refresh_token(user_id=user_stored.id)
 
+    response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
     response.set_cookie(
         **service.token.get_refresh_token_settings(refresh_token_value).data
     )
     response.set_cookie(
         **service.token.get_access_token_settings(access_token_value).data
     )
-
     return response

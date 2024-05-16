@@ -64,4 +64,4 @@ async def env() -> dict[Any, Any]:
     return settings.model_dump()
 
 
-app.include_router(auth_router, prefix="/auth", tags=["Auth"])
+app.include_router(auth_router, tags=["Auth"])

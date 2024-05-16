@@ -9,6 +9,12 @@ logger = logging.getLogger(__name__)
 ALPHA_NUM = string.ascii_letters + string.digits
 
 
+def generate_random_password(length: int = 32) -> str:
+    characters = string.ascii_letters + string.digits + string.punctuation
+    random_password = "".join(random.choice(characters) for i in range(length))
+    return random_password
+
+
 def generate_random_alphanum(length: int = 20) -> str:
     return "".join(random.choices(ALPHA_NUM, k=length))
 

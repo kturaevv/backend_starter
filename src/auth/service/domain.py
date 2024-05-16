@@ -94,13 +94,14 @@ async def create_user_with_password_and_role(
     return await _insert_user(query, values)
 
 
-async def create_user_with_sso(email: str) -> None:
+async def create_user_with_sso(email: str) -> AuthUserModel | None:
     query = f"""
-        INSERT INTO {AuthUserModel.table_name()} (email, created_at)
-        VALUES (%s, %s) RETURNING *;
+        INSERT INTO {AuthUserModel.table_name()} (email, password, created_at)
+        VALUES (%s, %s, %s) RETURNING *;
     """
-    values = (email, datetime.now())
-    await execute(query, values)
+    values = (email, utils.generate_random_password(), datetime.now())
+    data = await fetch_one(query, values)
+    return AuthUserModel(**data) if data else None
 
 
 async def delete_user(user_email: str) -> None:
@@ -117,6 +118,7 @@ async def get_user_by_id(user_id: int) -> AuthUserModel | None:
 async def get_user_by_email(email: str) -> AuthUserModel | None:
     query = f"SELECT * FROM {AuthUserModel.table_name()} WHERE email = %s;"
     data = await fetch_one(query, (email,))
+    print("YO: ", data)
     return AuthUserModel(**data) if data else None
 
 

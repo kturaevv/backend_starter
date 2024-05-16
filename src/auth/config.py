@@ -2,8 +2,6 @@ import argon2
 from fastapi_sso import GoogleSSO
 from pydantic_settings import BaseSettings
 
-from src.config import settings
-
 
 class AuthConfig(BaseSettings):
     JWT_ALG: str
@@ -30,5 +28,5 @@ auth_settings = AuthConfig()  # type: ignore
 google_sso = GoogleSSO(
     auth_settings.GOOGLE_CLIENT_ID,
     auth_settings.GOOGLE_CLIENT_SECRET,
-    settings.SITE_DOMAIN + "/auth/callback",
+    auth_settings.GOOGLE_REDIRECT_URI,
 )
