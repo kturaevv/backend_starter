@@ -13,6 +13,7 @@ from fastapi.responses import RedirectResponse
 from src.auth import service
 from src.auth.config import google_sso
 from src.auth.dependencies import (
+    valid_admin_user,
     valid_authenticated_user,
     valid_email_not_taken,
     valid_refresh_token,
@@ -38,6 +39,13 @@ async def get_my_account(
     if not user:
         raise DetailedHTTPException
     return BaseUser(**user.data)
+
+
+@router.get("/admin", include_in_schema=False)
+async def test_admin_access_endpoint(
+    _: JWTData = Depends(valid_admin_user),
+) -> str:
+    return "ok"
 
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED, response_model=BaseUser)

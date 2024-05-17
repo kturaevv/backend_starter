@@ -80,7 +80,7 @@ async def parse_tokens(
 ) -> JWTData | None:
     access_token, refresh_token = tokens
     if not access_token and not refresh_token:
-        return None
+        raise AuthRequired()
 
     if access_token:
         return await service.jwts.parse_access_token(access_token)

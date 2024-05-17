@@ -7,8 +7,10 @@
 - [x] Raw SQL queries with psycopg3
 - [x] Alembic migrations
 - [x] Integration tests starter pack
-- [x] Auth service - Custom
-- [ ] Auth service - SuperTokens / KeyCloak?
+- [x] Auth service - Custom / SuperTokens / KeyCloak?
+   - [x] Email / password login
+   - [x] SSO login 
+   - [] Roles
 - [ ] Traces - OpenTelemetry
 - [ ] Observability - Prometheus + Grafana
 - [ ] Payment service - Stripe

@@ -118,7 +118,6 @@ async def get_user_by_id(user_id: int) -> AuthUserModel | None:
 async def get_user_by_email(email: str) -> AuthUserModel | None:
     query = f"SELECT * FROM {AuthUserModel.table_name()} WHERE email = %s;"
     data = await fetch_one(query, (email,))
-    print("YO: ", data)
     return AuthUserModel(**data) if data else None
 
 
