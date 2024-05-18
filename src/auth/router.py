@@ -13,9 +13,9 @@ from fastapi.responses import RedirectResponse
 from src.auth import service
 from src.auth.config import google_sso
 from src.auth.dependencies import (
+    email_not_taken,
     valid_admin_user,
     valid_authenticated_user,
-    valid_email_not_taken,
     valid_refresh_token,
     valid_refresh_token_user,
 )
@@ -50,7 +50,7 @@ async def test_admin_access_endpoint(
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED, response_model=BaseUser)
 async def register_user(
-    auth_data: AuthUser = Depends(valid_email_not_taken),
+    auth_data: AuthUser = Depends(email_not_taken),
 ) -> BaseUser | HTTPException:
     user = await service.create_user_with_password(auth_data)
     if not user:

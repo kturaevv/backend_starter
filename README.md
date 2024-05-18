@@ -10,7 +10,7 @@
 - [x] Auth service - Custom / SuperTokens / KeyCloak?
    - [x] Email / password login
    - [x] SSO login 
-   - [] Roles
+   - [x] Roles
 - [ ] Traces - OpenTelemetry
 - [ ] Observability - Prometheus + Grafana
 - [ ] Payment service - Stripe
@@ -96,14 +96,26 @@ Root level files:
 - `src/main.py` - root of the project, which inits the FastAPI app
 - `src/<file.py>` - global, project wide files and configs. For example, database.py for DB configs.
 
-Each module is located in its own dedicated folder with common to files across modules:
+Each module is located in its own dedicated folder, i.e. auth, with common name patterns for module **components**. Each **component** is scoped for a specific purpose:
 
-- `router.py` - for endpoints
-- `schemas.py` - for Pydantic schemas
-- `models.py` - for db models
-- `dependencies.py` - for router dependencies
-- `service.py` - for business logic
-- `constants.py` - constants and error codes
-- `config.py` - module specific configurations
-- `exceptions.py` - module specific exceptions
-- `utils.py` - other
+- `router` - API routes
+--- 
+- `dependencies` - router integrated / user facing module specific logic
+- `service` - isolated module specific logic
+---
+- `models` - for db models
+- `schemas` - for Pydantic schemas
+---
+- `config` - module specific configurations
+- `constants` - constants and error codes
+- `exceptions` - module specific exceptions
+
+
+### Development rules
+
+Some do's and dont's:
+
+-  DO: always use absolute paths*
+-  DO: always access component related functions through component's name
+-  DO: always use service functions through the module name, i.e. service.my_function
+-  DO: expose component's functions through `__all__` if a component is nested, i.e. a sub-module 
