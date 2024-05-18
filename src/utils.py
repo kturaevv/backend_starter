@@ -1,5 +1,6 @@
 import logging
 import random
+import re
 import string
 
 import psycopg
@@ -9,10 +10,21 @@ logger = logging.getLogger(__name__)
 ALPHA_NUM = string.ascii_letters + string.digits
 
 
-def generate_random_password(length: int = 32) -> str:
-    characters = string.ascii_letters + string.digits + string.punctuation
-    random_password = "".join(random.choice(characters) for i in range(length))
-    return random_password
+def generate_random_password() -> str:
+    # Define the character sets
+    digits = string.digits
+    special_characters = "!@#$%^&*"
+    all_characters = string.ascii_letters + digits + special_characters
+
+    # Ensure the password contains at least one digit and one special character
+    while True:
+        password = "".join(random.choice(all_characters) for _ in range(8))
+        if (
+            any(char in digits for char in password)
+            and any(char in special_characters for char in password)
+            and re.match(r"^(?=.*[\d])(?=.*[!@#$%^&*])[\w!@#$%^&*]{6,128}$", password)
+        ):
+            return password
 
 
 def generate_random_alphanum(length: int = 20) -> str:

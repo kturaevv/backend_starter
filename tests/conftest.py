@@ -7,7 +7,7 @@ from async_asgi_testclient import TestClient
 
 from src import config
 from src.auth.schemas import AuthUser
-from src.auth.service.domain import create_user_with_password, delete_user
+from src.auth.service.core import create_user_with_password, delete_user
 from src.main import app
 from tests import utils
 from tests.base import status

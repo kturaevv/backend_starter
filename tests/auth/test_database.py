@@ -2,7 +2,7 @@ import time
 
 from src.auth.models import UserRoles
 from src.auth.schemas import AuthUser
-from src.auth.service.domain import (
+from src.auth.service.core import (
     create_user_with_password,
     create_user_with_password_and_role,
     get_user_by_email,
