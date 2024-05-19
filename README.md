@@ -1,25 +1,5 @@
 # CORE API
 
-#### TODO:
-
-- [x] Base code architecture
-- [x] Static typing - Mypy
-- [x] Raw SQL queries with psycopg3
-- [x] Alembic migrations
-- [x] Integration tests starter pack
-- [x] Auth service - Custom / SuperTokens / KeyCloak?
-   - [x] Email / password login
-   - [x] SSO login 
-   - [x] Roles
-- [x] Traces - OpenTelemetry
-- [ ] Payment service - Stripe
-- [ ] Management - CRUD -> DB-service
-- [ ] Statistics - CRUD -> DB-service
-- [ ] Storage service - AWS
-- [ ] Provisioning IaaC - Terraform on AWS EC2 / Fargate
-- [ ] CI/CD Github Actions [managed]
-- [ ] Reverse proxy - NGINX
-
 ## Pre-requisites
 
 1. Make sure to have `just` installed on your system.
@@ -112,9 +92,28 @@ Each module is located in its own dedicated folder, i.e. auth, with common name 
 
 ### Development rules
 
-Some do's and dont's:
+Dev. rules to follow while developing this app:
 
--  DO: always use absolute paths*
--  DO: always access component related functions through component's name
--  DO: always use service functions through the module name, i.e. service.my_function
--  DO: expose component's functions through `__all__` if a component is nested, i.e. a sub-module 
+-  always use absolute paths*
+-  always access component related functions through component's name
+-  always use service functions through the module name, i.e. service.my_function
+-  always write integration tests for endpoints, cover all possible states
+-  expose component's functions through `__all__` if a component is nested, i.e. a sub-module 
+
+#### TODO:
+
+- [x] Base code architecture
+- [x] Static typing - Mypy
+- [x] Raw SQL queries with psycopg3
+- [x] Alembic migrations
+- [x] Integration tests starter pack
+- [x] Auth service - Custom / SuperTokens / KeyCloak?
+   - [x] Email / password login
+   - [x] SSO login 
+   - [x] Roles
+- [x] Traces - OpenTelemetry
+- [ ] Provisioning IaaC - DigitalOcean App Spec
+- [ ] Storage service - DigitalOcean Spaces
+- [ ] CI/CD / Dashboard / Deployment utilities - Coolify
+- [ ] Payment service - Stripe `service`
+- [ ] Observability - Datadog `service`
