@@ -11,8 +11,7 @@
    - [x] Email / password login
    - [x] SSO login 
    - [x] Roles
-- [ ] Traces - OpenTelemetry
-- [ ] Observability - Prometheus + Grafana
+- [x] Traces - OpenTelemetry
 - [ ] Payment service - Stripe
 - [ ] Management - CRUD -> DB-service
 - [ ] Statistics - CRUD -> DB-service

@@ -5,12 +5,14 @@ from typing import Any, AsyncGenerator
 import redis.asyncio as aioredis
 import sentry_sdk
 from fastapi import FastAPI
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from psycopg_pool import AsyncConnectionPool
 from starlette.middleware.cors import CORSMiddleware
 
 from src import caching, database
 from src.auth.router import router as auth_router
 from src.config import app_configs, settings
+from src.tracing import setup_tracing
 
 
 @asynccontextmanager
@@ -52,6 +54,12 @@ if settings.ENVIRONMENT.is_deployed:
         dsn=settings.SENTRY_DSN,
         environment=settings.ENVIRONMENT,
     )
+
+    # Set up tracing
+    setup_tracing()
+
+    # Instrument the FastAPI app
+    FastAPIInstrumentor.instrument_app(app)
 
 
 @app.get("/healthcheck", include_in_schema=False)
