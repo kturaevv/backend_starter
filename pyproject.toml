@@ -37,7 +37,9 @@ show_column_numbers = true
 ignore_missing_imports = true
 warn_unused_ignores = false
 plugins = "sqlalchemy.ext.mypy.plugin"
-exclude = "alembic"
+exclude = '''
+^alembic$|
+'''
 
 [[tool.mypy.overrides]]
 module = [

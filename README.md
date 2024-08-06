@@ -112,7 +112,6 @@ Dev. rules to follow while developing this app:
    - [x] SSO login 
    - [x] Roles
 - [x] Traces - OpenTelemetry
-- [ ] Provisioning IaaC - DigitalOcean App Spec
 - [ ] Storage service - DigitalOcean Spaces
 - [ ] CI/CD / Dashboard / Deployment utilities - Coolify
 - [ ] Payment service - Stripe `service`

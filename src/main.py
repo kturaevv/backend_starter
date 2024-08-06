@@ -1,4 +1,4 @@
-import asyncio
+import asyncio  # noqa: I001
 from contextlib import asynccontextmanager
 from typing import Any, AsyncGenerator
 
@@ -10,6 +10,7 @@ from psycopg_pool import AsyncConnectionPool
 from starlette.middleware.cors import CORSMiddleware
 
 from src import caching, database
+from src.chat.router import router as chat_router
 from src.auth.router import router as auth_router
 from src.config import app_configs, settings
 from src.tracing import setup_tracing
@@ -72,4 +73,5 @@ async def env() -> dict[Any, Any]:
     return settings.model_dump()
 
 
-app.include_router(auth_router, tags=["Auth"])
+app.include_router(auth_router, tags=["auth"])
+app.include_router(chat_router, tags=["chat"])
