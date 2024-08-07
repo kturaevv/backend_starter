@@ -1,11 +1,13 @@
-from fastapi import APIRouter, WebSocket
+from fastapi import APIRouter, WebSocket, Depends
 from fastapi.responses import HTMLResponse
+
+from src.auth.dependencies import domain_registered
 
 router = APIRouter(prefix="/chat")
 
 
 @router.get("/")
-async def get():
+async def get(domain_supported: bool = Depends(domain_registered)):
     return HTMLResponse(open("./src/chat/index.html", "r").read())
 
 

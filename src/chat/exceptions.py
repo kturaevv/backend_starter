@@ -1,6 +1,6 @@
-from src.chat.constants import ChatErrorCode
+from src.chat.constants import ChatErrorCodes
 from src.exceptions import BadRequest
 
 
 class WebsocketClosed(BadRequest):
-    DETAIL = ChatErrorCode.WEBSOCKET_CLOSED
+    DETAIL = ChatErrorCodes.WEBSOCKET_CLOSED

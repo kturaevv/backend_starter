@@ -62,7 +62,9 @@ async def register_user(
 async def auth_user(
     response: Response, user: AuthUserModel = Depends(service.authenticate_user)
 ) -> AccessTokenResponse:
-    access_token_value = service.jwts.create_access_token(user=user)
+    access_token_value = service.jwts.create_access_token(
+        user_id=user.id, is_admin=user.is_admin
+    )
     refresh_token_value = await service.create_refresh_token(user_id=user.id)
 
     response.set_cookie(
@@ -85,7 +87,9 @@ async def refresh_token(
     refresh_token: AuthRefreshTokenModel = Depends(valid_refresh_token),
     user: AuthUserModel = Depends(valid_refresh_token_user),
 ) -> AccessTokenResponse:
-    access_token_value = service.jwts.create_access_token(user=user)
+    access_token_value = service.jwts.create_access_token(
+        user_id=user.id, is_admin=user.is_admin
+    )
     refresh_token_value = await service.create_refresh_token(user_id=user.id)
 
     response.set_cookie(

@@ -2,6 +2,7 @@ import asyncio  # noqa: I001
 from contextlib import asynccontextmanager
 from typing import Any, AsyncGenerator
 
+import fastapi
 import redis.asyncio as aioredis
 import sentry_sdk
 from fastapi import FastAPI
@@ -66,6 +67,12 @@ if settings.ENVIRONMENT.is_deployed:
 @app.get("/healthcheck", include_in_schema=False)
 async def healthcheck() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/")
+async def get_domain(request: fastapi.Request):
+    host = request.headers.get("host")
+    return {"domain": host}
 
 
 @app.get("/env", include_in_schema=False)

@@ -8,8 +8,13 @@ from pydantic import UUID4
 from src import utils
 from src.auth.config import auth_settings
 from src.auth.exceptions import InvalidCredentials
-from src.auth.models import AuthRefreshTokenModel, AuthUserModel, UserRoles
-from src.auth.schemas import AuthUser, BaseUser
+from src.auth.models import (
+    AuthRefreshTokenModel,
+    AuthUserModel,
+    DomainInformationModel,
+    UserRoles,
+)
+from src.auth.schemas import AuthUser, BaseUser, DomainNameValidator
 from src.auth.security import hash_password, verify_password
 from src.database import execute, fetch_one
 
@@ -108,3 +113,11 @@ async def authenticate_user(auth_data: AuthUser) -> AuthUserModel:
     if not user or not verify_password(user.password, auth_data.password):
         raise InvalidCredentials()
     return user
+
+
+async def check_domain_is_registered(domain_name: DomainNameValidator) -> bool:
+    query = f"""
+        SELECT id FROM {DomainInformationModel.table_name()} WHERE domain_name = %s
+    """
+    result = await fetch_one(query, (domain_name.domain,))
+    return True if result else False

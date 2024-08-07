@@ -24,3 +24,7 @@ class EmailTaken(BadRequest):
 
 class RefreshTokenNotValid(NotAuthenticated):
     DETAIL = ErrorCode.REFRESH_TOKEN_NOT_VALID
+
+
+class DomainError(BadRequest):
+    DETAIL = ErrorCode.DOMAIN_IS_NOT_SUPPORTED

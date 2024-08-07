@@ -6,3 +6,4 @@ class ErrorCode:
     EMAIL_TAKEN = "Email is already taken."
     REFRESH_TOKEN_NOT_VALID = "Refresh token is not valid."
     REFRESH_TOKEN_REQUIRED = "Refresh token is required either in the body or cookie."
+    DOMAIN_IS_NOT_SUPPORTED = "Domain name is not found in registered domains."

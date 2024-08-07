@@ -60,7 +60,9 @@ async def refresh_access_token(
     if access_token:
         return access_token
 
-    access_token_value = service.jwts.create_access_token(user=user)
+    access_token_value = service.jwts.create_access_token(
+        user_id=user.id, is_admin=user.is_admin
+    )
     response.set_cookie(
         **service.token.get_access_token_settings(access_token_value).data
     )

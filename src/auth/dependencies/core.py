@@ -1,13 +1,14 @@
-from fastapi import Depends, Response
+from fastapi import Depends, Request, Response
 
 from src.auth import schemas, service
 from src.auth.exceptions import (
     AuthorizationFailed,
     AuthRequired,
+    DomainError,
     EmailTaken,
     RefreshTokenNotValid,
 )
-from src.auth.schemas import JWTData
+from src.auth.schemas import DomainNameValidator, JWTData
 
 from .access_token import (
     decode_access_token,
@@ -39,7 +40,9 @@ async def _parse_tokens(
         if not user:
             raise AuthRequired()
 
-        new_access_token = service.jwts.create_access_token(user=user)
+        new_access_token = service.jwts.create_access_token(
+            user_id=user.id, is_admin=user.is_admin
+        )
         response.set_cookie(
             **service.token.get_access_token_settings(new_access_token).data
         )
@@ -72,3 +75,35 @@ async def valid_admin_user(
         raise AuthorizationFailed()
 
     return token
+
+
+async def domain_registered(
+    request: Request,
+    response: Response,
+    tokens: tuple[str | None, str | None] = Depends(retrieve_auth_tokens),
+) -> bool:
+    access_token, refresh_token = tokens
+    if not access_token and not refresh_token:
+        # domain_name = DomainNameValidator(domain=request.headers.get("host"))
+        domain_name = DomainNameValidator(domain="example.com")
+        check: bool = await service.check_domain_is_registered(domain_name)
+        if not check:
+            raise DomainError()
+
+    if access_token:
+        return await parse_access_token(access_token)
+
+    if refresh_token:
+        try:
+            await valid_refresh_token(refresh_token)
+        except RefreshTokenNotValid:
+            raise AuthRequired()
+
+        new_access_token = service.jwts.create_access_token()
+        response.set_cookie(
+            **service.token.get_access_token_settings(new_access_token).data
+        )
+
+        payload = decode_access_token(new_access_token)
+
+    return JWTData(**payload)

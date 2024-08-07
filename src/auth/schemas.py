@@ -3,6 +3,7 @@ import typing
 from datetime import datetime
 
 from pydantic import EmailStr, Field, field_validator
+from typing_extensions import Annotated
 
 from src.schema import CustomModel
 
@@ -50,3 +51,13 @@ class CookieParameters(CustomModel):
     secure: bool = False
     httponly: bool = False
     samesite: typing.Literal["lax", "strict", "none"] | None = "lax"
+
+
+class DomainNameValidator(CustomModel):
+    domain: Annotated[
+        str,
+        Field(
+            pattern=r"^(([a-zA-Z]{1})|([a-zA-Z]{1}[a-zA-Z]{1})|([a-zA-Z]{1}[0-9]{1})|([0-9]{1}[a-zA-Z]{1})|([a-zA-Z0-9][a-zA-Z0-9-_]{1,61}[a-zA-Z0-9]))\.([a-zA-Z]{2,6}|[a-zA-Z0-9-]{2,30}\.[a-zA-Z]{2,3})$",
+            description="A valid domain name without path",
+        ),
+    ]

@@ -112,6 +112,12 @@ Dev. rules to follow while developing this app:
    - [x] SSO login 
    - [x] Roles
 - [x] Traces - OpenTelemetry
+- [ ] Chat
+   - [x] Sample chat UI
+   - [ ] Tests
+   - [ ] Database models
+   - [ ] Routes
+   - [ ] Sample chat UI
 - [ ] Storage service - DigitalOcean Spaces
 - [ ] CI/CD / Dashboard / Deployment utilities - Coolify
 - [ ] Payment service - Stripe `service`
