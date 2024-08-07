@@ -1,5 +1,7 @@
 from enum import Enum
 
+from typing_extensions import Annotated
+
 DB_NAMING_CONVENTION = {
     "ix": "%(column_0_label)s_idx",
     "uq": "%(table_name)s_%(column_0_name)s_key",
@@ -26,3 +28,7 @@ class Environment(str, Enum):
     @property
     def is_deployed(self) -> bool:
         return self in (self.STAGING, self.PRODUCTION)
+
+
+class Fields:
+    STR_255 = Annotated[str, 255]

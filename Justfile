@@ -50,7 +50,7 @@ mount-docker-backup *args:
 restore *args:
     docker compose -f ./docker/docker-compose.yml exec app_db scripts/restore {{args}}
 
-remigrate:
+clean_migrate:
     docker compose -f ./docker/docker-compose.yml exec app alembic downgrade base
     rm ./alembic/versions/*.py
     docker compose -f ./docker/docker-compose.yml exec app alembic revision --autogenerate -m init
